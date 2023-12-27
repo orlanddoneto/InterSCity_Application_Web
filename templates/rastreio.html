@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterSCity</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <h1>Informações do Veículo</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Ano</th>
+                <th>Placa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Espaço reservado para as linhas dos veículos -->
+            {% for vehicle in vehicle_rows %}
+                <tr>
+                    <td>{{ vehicle[4] }}</td>
+                    <td>{{ vehicle[3] }}</td>
+                    <td>{{ vehicle[5] }}</td>
+                    <td>{{ vehicle[2] }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">Nenhum dado encontrado.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
