@@ -19,16 +19,13 @@
         </thead>
         <tbody>
             <!-- Espaço reservado para as linhas dos veículos -->
-            {% for vehicle in vehicle_rows %}
                 <tr>
-                    <td>{{ vehicle[4] }}</td>
-                    <td>{{ vehicle[3] }}</td>
-                    <td>{{ vehicle[5] }}</td>
-                    <td>{{ vehicle[2] }}</td>
+                    <td>{{ vehicle_rows['modelo'] }}</td>
+                    <td>{{ vehicle_rows['marca'] }}</td>
+                    <td>{{ vehicle_rows['ano'] }}</td>
+                    <td>{{ vehicle_rows['placa'] }}</td>
                 </tr>
-            {% else %}
-                <tr><td colspan="4">Nenhum dado encontrado.</td></tr>
-            {% endfor %}
+            
         </tbody>
     </table>
 </body>
