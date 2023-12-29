@@ -47,14 +47,16 @@ def get_localizacao(placa):
     """Retorna um dicionario com informações de localização e horário"""
     try:
         capacidades = tabela_resource[placa][1]
-        localizacao = {}
+        localizacao = []
+        i = 0
         if "localizacao" in capacidades:
             for location in capacidades["localizacao"]:
-                localizacao['lat'] = location["lat"]
-                localizacao['lon'] = location["lon"]
+                localizacao[i][0] = location["lat"]
+                localizacao[i][1] = location["lon"]
                 data_obj = datetime.strptime(location["date"], "%Y-%m-%dT%H:%M:%S.%fZ")
-                localizacao['dia'] = data_obj.strftime("%Y-%m-%d")
-                localizacao['hora'] = data_obj.strftime("%H:%M:%S.%f")[:-3]
+                localizacao[i][2] = data_obj.strftime("%Y-%m-%d")
+                localizacao[i][3] = data_obj.strftime("%H:%M:%S.%f")[:-3]
+                i+=i
             return localizacao
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
