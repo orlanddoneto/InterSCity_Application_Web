@@ -36,7 +36,7 @@ def get_dados_carro(placa, tabela_resource):
     """Retorna um dicionário com os dados de um carro"""
 
     try:
-        response_uid = requests.get(tabela_resource[placa][0])
+        response_uid = requests.get(tabela_resource[placa][0]) #[0] se refere ao url_uuid
         dados_carro = response_uid.json()["data"]["description"].split(";")
         if(len(dados_carro)>=6):
             table_dados = {}
@@ -46,14 +46,16 @@ def get_dados_carro(placa, tabela_resource):
             table_dados['ano'] = dados_carro[5]
             return table_dados
         else:
-            return []
+            return False
 
     except Exception as e:
         print(f"Ocorreu um erro na get dados carro: {e}")
+        return False
 
 def get_localizacao(placa, tabela_resource):
     """Retorna um dicionario com informações de localização e horário"""
     try:
+        
         capacidades = tabela_resource.get(placa, [])[1]
         localizacao = []
         i = 0
@@ -69,10 +71,20 @@ def get_localizacao(placa, tabela_resource):
                 localizacao.append([lat, lon, data_formatada, hora_formatada])
             return localizacao
         else:
-            return []
+            return False
     except Exception as e:
         print(f"Ocorreu um erro na getlocalizao: {e}")
-        return []
+        return False
+
+def normalizaPlacas(placas):
+    placas.strip()
+    placas.upper()
+    vetor_placas = placas.split(";")
+    if placas[len(placas)-1] == ";":
+        vetor_placas.pop()
+    return vetor_placas
+        
+
     
 
 
