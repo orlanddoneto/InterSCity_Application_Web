@@ -77,12 +77,16 @@ def get_localizacao(placa, tabela_resource):
         return False
 
 def normalizaPlacas(placas):
-    placas.strip()
-    placas.upper()
+    placas = placas.strip()  # Atualiza a variável com a string normalizada
+    placas = placas.upper()  # Atualiza a variável com a string normalizada
     vetor_placas = placas.split(";")
-    if placas[len(placas)-1] == ";":
+    
+    # Verifica se o último elemento é um ponto e vírgula e remove-o, se necessário
+    if placas[-1] == ";":
         vetor_placas.pop()
+        
     return vetor_placas
+
         
 
     

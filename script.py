@@ -4,9 +4,9 @@ import requests
 import functions as func
 import folium
 import carro
-
+import random
 tabela_resource = func.initialize_tabela_resources()
-cores_marcadores = ["red","blue","yellow","green","purple","orange","gray"]
+cores_marcadores = ['lightred','blue','purple','orange','gray','black','beige','green']
 
 app = Flask(__name__)
 
@@ -23,12 +23,16 @@ def index():
             
             return render_template("index.html", error="Por favor, digite a placa.")
 
-@app.route("/rastreio")
+@app.route("/rastreio", methods=["GET"])
 def rastrear():
     placas = request.args.get("placa")
+    print(placas)
     placas_vetor = func.normalizaPlacas(placas)
     existe_placa_valida = False
     carros = []
+    m = folium.Map(location=[-10.53073, -46.3068 ], zoom_start=5)
+    cores_disponiveis = random.sample(cores_marcadores,len(placas_vetor))
+    count_cores=0
     try:
         for placa in placas_vetor:
             dados_carro = func.get_dados_carro(placa,tabela_resource)    
@@ -39,17 +43,19 @@ def rastrear():
                 i = 0
                 while(existe_placa_valida != True):
                     if localizacao and localizacao[i]:
-                        m = folium.Map(location=[localizacao[i][0], localizacao[i][1]], zoom_start=13)
                         existe_placa_valida = True
                         break
                     elif(len(localizacao)-1 == i):
                         break
                     i+=1
-                    
+                if (not existe_placa_valida):
+                    continue
+
                 """Cria e adiciona a listas de carros uma instancia de carro"""
-                carro_temp = carro.Carro(dados_carro,localizacao,cores_marcadores[len(carros)])
+                carro_temp = carro.Carro(dados_carro,localizacao,cores_disponiveis[count_cores])
                 carros.append(carro_temp)
-                
+                count_cores += 1
+
                 """Insere marcadores de um específico carro no mapa"""
                 for pos in carro_temp.localizacao:
                     lat = pos[0]
@@ -61,10 +67,15 @@ def rastrear():
 
         """Se não achou nenhuma placa, retorna uma página com erro"""
         if(not existe_placa_valida):
-            return render_template("notSearch.html",error_message=str(e))
+            return render_template("notSearch.html")
 
         """Retorna o mapa com todos os marcadores adicionados"""
         map_html = m._repr_html_()
+
+        #testando
+        for car in carros:
+            print(car.cor_marcador)
+            
         return render_template("rastreio.html", vehicle_rows = carros[0], map_html = map_html)
             
            
