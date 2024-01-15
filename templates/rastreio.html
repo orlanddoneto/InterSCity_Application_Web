@@ -9,25 +9,29 @@
 <body>
     <div id="cabecalho">
         <h1>Informações do Veículo</h1>
+        {% for vehicle in vehicle_rows %}
         <table border="1">
+            
             <thead>
+                
                 <tr>
-                    <th>Modelo</th>
-                    <th>Marca</th>
-                    <th>Ano</th>
-                    <th>Placa</th>
+                    <th style="background-color: {{ vehicle.cor_marcador }};">Modelo</th>
+                    <th style="background-color: {{ vehicle.cor_marcador }};">Marca</th>
+                    <th style="background-color: {{ vehicle.cor_marcador }};">Ano</th>
+                    <th style="background-color: {{ vehicle.cor_marcador }};">Placa</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Espaço reservado para as linhas dos veículos -->
                     <tr>
-                        <td>{{ vehicle_rows.modelo }}</td>
-                        <td>{{ vehicle_rows.marca }}</td>
-                        <td>{{ vehicle_rows.ano }}</td>
-                        <td>{{ vehicle_rows.placa }}</td>
+                        <td>{{ vehicle.modelo }}</td>
+                        <td>{{ vehicle.marca }}</td>
+                        <td>{{ vehicle.ano }}</td>
+                        <td>{{ vehicle.placa }}</td>
                     </tr>
                 
             </tbody>
+            {% endfor %}
     </table>
 
     </div>
