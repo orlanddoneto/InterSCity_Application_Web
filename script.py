@@ -6,16 +6,22 @@ import folium
 import carro
 import random
 tabela_resource = func.initialize_tabela_resources()
-cores_marcadores = ['lightred','blue','purple','orange','gray','black','beige','green']
+todos_carros = []
+for placa in tabela_resource:
+    carro_temp = func.get_dados_carro(placa,tabela_resource)  
+    
+    todos_carros.append(carro_temp)
 
+cores_marcadores = ['lightred','lightblue','purple','orange','gray','black','green']
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
-        return render_template("index.html")
+        return render_template("index.html", todos_carros=todos_carros)
     elif request.method == "POST":
         placa = request.form.get("placa")
+        
 
         if placa:
             return redirect("/rastreio?placa=" + placa)
@@ -25,6 +31,7 @@ def index():
 
 @app.route("/rastreio", methods=["GET"])
 def rastrear():
+    
     placas = request.args.get("placa")
     print(placas)
     placas_vetor = func.normalizaPlacas(placas)
@@ -74,9 +81,9 @@ def rastrear():
 
         #testando
         for car in carros:
-            print(car.cor_marcador)
+            print(f"a {car.cor_marcador}")
             
-        return render_template("rastreio.html", vehicle_rows = carros[0], map_html = map_html)
+        return render_template("rastreio.html", vehicle_rows = carros, map_html = map_html,)
             
            
             
@@ -86,3 +93,4 @@ def rastrear():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
