@@ -5,38 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InterSCity</title>
     <link rel="stylesheet" href="../static/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
     <div id="cabecalho">
         <h1>Informações do Veículo</h1>
-        {% for vehicle in vehicle_rows %}
-        <table border="1">
-            
-            <thead>
-                
-                <tr>
-                    <th style="background-color: {{ vehicle.cor_marcador }};">Modelo</th>
-                    <th style="background-color: {{ vehicle.cor_marcador }};">Marca</th>
-                    <th style="background-color: {{ vehicle.cor_marcador }};">Ano</th>
-                    <th style="background-color: {{ vehicle.cor_marcador }};">Placa</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Espaço reservado para as linhas dos veículos -->
-                    <tr>
-                        <td>{{ vehicle.modelo }}</td>
-                        <td>{{ vehicle.marca }}</td>
-                        <td>{{ vehicle.ano }}</td>
-                        <td>{{ vehicle.placa }}</td>
-                    </tr>
-                
-            </tbody>
-            {% endfor %}
-    </table>
 
+        {% for vehicle in vehicle_rows %}
+            <table border="1">
+                
+                <thead>
+                    
+                    <tr>
+                        <th style="background-color: {{ vehicle.cor_marcador }};">Modelo</th>
+                        <th style="background-color: {{ vehicle.cor_marcador }};">Marca</th>
+                        <th style="background-color: {{ vehicle.cor_marcador }};">Ano</th>
+                        <th style="background-color: {{ vehicle.cor_marcador }};">Placa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Espaço reservado para as linhas dos veículos -->
+                        <tr>
+                            <td>{{ vehicle.modelo }}</td>
+                            <td>{{ vehicle.marca }}</td>
+                            <td>{{ vehicle.ano }}</td>
+                            <td>{{ vehicle.placa }}</td>
+                        </tr>
+                        
+                </tbody>
+                <button class="botao-placa" data-placa={{ vehicle.placa }}>Carregar/Esconder Endereços</button>
+                <div class="historico-localizacoes" style="display: none; background-color: white;"></div>
+            </table>
+        {% endfor %}
+        
     </div>
     
     <div id="map-container">
         {{ map_html | safe }}
     </div>
+    <script>
+        $('.botao-placa').on('click', function() {
+            var placa = $(this).data('placa');
+            var historicoDiv = $(this).next('.historico-localizacoes');
+
+            // Fazer a requisição AJAX para o Flask com a informação da placa
+            $.get('/historico-enderecos', { placa: placa }, function(data) {
+                
+                var listaEnderecos = '<ul>';
+                for (var i = 0; i < data.length; i++) {
+                    listaEnderecos += '<li>' + data[i] + '</li>';
+                }
+                listaEnderecos += '</ul>';
+            
+                // Atualizar a parte HTML da página com os dados recebidos
+                historicoDiv.html(listaEnderecos);
+                
+                // Alternar a exibição do histórico de localizações
+                historicoDiv.toggle();
+            });
+        });
+    </script>
 </body>
+</html>

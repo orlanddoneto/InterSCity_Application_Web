@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from datetime import datetime
 import requests
 import functions as func
@@ -12,7 +12,7 @@ for placa in tabela_resource:
     
     todos_carros.append(carro_temp)
 
-cores_marcadores = ['lightred','lightblue','purple','orange','gray','black','green']
+cores_marcadores = ['red','lightblue','purple','orange','gray','lightgreen','green']
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
@@ -33,7 +33,6 @@ def index():
 def rastrear():
     
     placas = request.args.get("placa")
-    print(placas)
     placas_vetor = func.normalizaPlacas(placas)
     existe_placa_valida = False
     carros = []
@@ -46,7 +45,7 @@ def rastrear():
             localizacao = func.get_localizacao(placa,tabela_resource)
          
             if dados_carro and localizacao:
-                """Busca a primeira localização válida para deixar fixada no mapa inicial"""
+                """Verifica se há ao menos uma localização"""
                 i = 0
                 while(existe_placa_valida != True):
                     if localizacao and localizacao[i]:
@@ -78,18 +77,36 @@ def rastrear():
 
         """Retorna o mapa com todos os marcadores adicionados"""
         map_html = m._repr_html_()
-
-        #testando
-        for car in carros:
-            print(f"a {car.cor_marcador}")
             
         return render_template("rastreio.html", vehicle_rows = carros, map_html = map_html,)
             
-           
-            
+
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
         return render_template("erro.html",error_message=str(e))
+
+@app.route('/historico-enderecos')
+def obter_historico_enderecos():
+    try:
+        print("chegou aqui")
+        # Obtém a placa do argumento da requisição
+        placa_endr = request.args.get('placa', '')
+
+        # Obtém o histórico de localizações
+        localizacoes = func.get_localizacao(placa_endr, tabela_resource)
+
+        # Ordena as datas
+        datas_ordenadas = func.ordenar_datas(localizacoes)
+
+        # Obtém os endereços correspondentes às localizações
+        buffer = [func.obter_endereco(info[0], info[1]) for info in datas_ordenadas][:10]
+        return buffer
+    
+    except Exception as e:
+        # Registra a exceção no log
+        app.logger.error(f"Erro ao processar a requisição: {e}")
+        # Retorna uma resposta de erro ao cliente
+        return jsonify({'result': 'error', 'message': 'Erro interno do servidor'}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
