@@ -9,7 +9,7 @@
 </head>
 <body>
     <div id="cabecalho">
-        <h1>Informações do Veículo</h1>
+        <h2>InterSCity - Resultados da Pesquisa</h2>
 
         {% for vehicle in vehicle_rows %}
             <table border="1">
@@ -33,9 +33,9 @@
                         </tr>
                         
                 </tbody>
-                <button class="botao-placa" data-placa={{ vehicle.placa }}>Carregar/Esconder Endereços</button>
-                <div class="historico-localizacoes" style="display: none; background-color: white;"></div>
             </table>
+            <button class="botao-placa" data-placa="{{ vehicle.placa }}">Carregar/Esconder Endereços</button>
+            <div class="historico-localizacoes" style="display: none; background-color: white;"></div>
         {% endfor %}
         
     </div>
@@ -44,26 +44,42 @@
         {{ map_html | safe }}
     </div>
     <script>
+        // Armazenar dados localmente
+        var dadosLocalizados = {};
+
         $('.botao-placa').on('click', function() {
             var placa = $(this).data('placa');
             var historicoDiv = $(this).next('.historico-localizacoes');
 
-            // Fazer a requisição AJAX para o Flask com a informação da placa
-            $.get('/historico-enderecos', { placa: placa }, function(data) {
-                
-                var listaEnderecos = '<ul>';
-                for (var i = 0; i < data.length; i++) {
-                    listaEnderecos += '<li>' + data[i] + '</li>';
-                }
-                listaEnderecos += '</ul>';
-            
-                // Atualizar a parte HTML da página com os dados recebidos
-                historicoDiv.html(listaEnderecos);
-                
-                // Alternar a exibição do histórico de localizações
-                historicoDiv.toggle();
-            });
+            // Verificar se já temos os dados localmente
+            if (dadosLocalizados[placa]) {
+                // Usar os dados armazenados localmente
+                exibirDados(dadosLocalizados[placa], historicoDiv);
+            } else {
+                // Fazer a requisição AJAX para o Flask com a informação da placa
+                $.get('/historico-enderecos', { placa: placa }, function(data) {
+                    // Armazenar os dados localmente
+                    dadosLocalizados[placa] = data;
+
+                    // Exibir os dados
+                    exibirDados(data, historicoDiv);
+                });
+            }
         });
+
+        function exibirDados(data, historicoDiv) {
+            var listaEnderecos = '<ul>';
+            for (var i = 0; i < data.length; i++) {
+                listaEnderecos += '<li>' + data[i] + '</li>';
+            }
+            listaEnderecos += '</ul>';
+            
+            // Atualizar a parte HTML da página com os dados recebidos
+            historicoDiv.html(listaEnderecos);
+
+            // Alternar a exibição do histórico de localizações
+            historicoDiv.slideToggle();
+        }
     </script>
 </body>
 </html>

@@ -88,7 +88,6 @@ def rastrear():
 @app.route('/historico-enderecos')
 def obter_historico_enderecos():
     try:
-        print("chegou aqui")
         # Obtém a placa do argumento da requisição
         placa_endr = request.args.get('placa', '')
 
@@ -99,7 +98,7 @@ def obter_historico_enderecos():
         datas_ordenadas = func.ordenar_datas(localizacoes)
 
         # Obtém os endereços correspondentes às localizações
-        buffer = [func.obter_endereco(info[0], info[1]) for info in datas_ordenadas][:10]
+        buffer = [func.obter_endereco(info[0], info[1]) for info in datas_ordenadas[:10]]
         return buffer
     
     except Exception as e:
