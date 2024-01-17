@@ -33,7 +33,7 @@ body {
     backdrop-filter: blur(10px);
     opacity: .9;
     background-color: cadetblue;
-    margin: 10% 25% 25% 25% ;
+    margin: 10% 25% 0% 25% ;
     text-align: center;
     border-radius: 20px;
     font-weight: bold;
@@ -52,6 +52,11 @@ th, td {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
 }
 
 tr:hover {
@@ -84,4 +89,59 @@ tr:hover {
 
 #cabecalho{
   width: 100%;
+}
+
+/* Estilo para a caixa scrollável */
+.caixa-scroll {
+  max-height: 400px; /* Altura máxima da caixa scrollável */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical quando necessário */
+  margin: 5% 25% 0% 25%;
+}
+
+/* Estilo para cada item de lista */
+.item-lista {
+  display: flex;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 10px;
+  text-decoration: none;
+  color: black;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Estilo para o retângulo ao passar o mouse */
+
+
+/* Estilo para a imagem */
+.imagem {
+  width: 150px;
+  height: auto;
+  border-right: 1px solid #ccc;
+}
+
+/* Estilo para o conteúdo */
+.conteudo {
+  flex: 1;
+  padding: 10px;
+}
+
+.subtitulos {
+  display: flex;
+  margin-top: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo para o subtítulo */
+.subtitulo {
+  font-size: 16px;
+  margin-right: 25px;
+  margin-left: 25px;
+  color: #666;
+}
+
+.selecionado {
+  background-color: #cbcbcb; /* Levemente cinza */
 }
